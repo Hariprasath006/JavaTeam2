@@ -10,10 +10,16 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
+  const register = (userData) => {
+    // Later replace with API call
+    // For now, just return success
+    return Promise.resolve({ success: true });
+  };
+
   const logout = () => setUser(null);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

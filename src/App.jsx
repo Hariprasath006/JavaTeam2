@@ -12,12 +12,15 @@ import Bookings from "./pages/admin/Bookings";
 import UserDashboard from "./pages/user/Dashboard";
 import UserResources from "./pages/user/Resources";
 import MyBookings from "./pages/user/MyBookings";
+import Register from "./pages/auth/Register";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Admin Routes */}
         <Route
