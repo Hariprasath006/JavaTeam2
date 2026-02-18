@@ -1,71 +1,63 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { getBookings, updateBookingStatus } from "../../api/api";
+import { getBookings } from "../../api/api";
+import { getUser } from "../../utils/auth";
 
 export default function StaffBookings() {
 
+  const user = getUser();
   const [bookings, setBookings] = useState([]);
+
+  const formatStatus = (status) => {
+    if (status === "PENDING") return "APPLIED";
+    return status;
+  };
 
   const loadBookings = async () => {
     const res = await getBookings();
-    setBookings(res.data);
+
+    const myBookings = res.data.filter(
+      b => b.userId === user.id
+    );
+
+    setBookings(myBookings);
   };
 
   useEffect(() => {
     loadBookings();
   }, []);
 
-  const updateStatus = async (id, status) => {
-    await updateBookingStatus(id, status);
-    loadBookings();
-  };
-
-  const pendingRequests = bookings.filter(b => b.status === "PENDING");
-
   return (
     <Layout>
       <div className="card">
-        <h2>Student Requests 🎓</h2>
+        <h2>My Bookings 📚</h2>
 
-        {pendingRequests.length === 0 ? (
-          <p>No Pending Requests</p>
+        {bookings.length === 0 ? (
+          <p>No Bookings Found</p>
         ) : (
-          pendingRequests.map(b => (
+          bookings.map(b => (
             <div key={b.id} className="list-item">
 
-              {b.user?.name} – {b.resource?.name}
+              <div>
+                <b>Resource:</b> {b.resourceName || b.resourceId}
+              </div>
 
-              <button onClick={() =>
-                updateStatus(b.id, "FACULTY_APPROVED")
-              }>
-                Approve
-              </button>
+              <div>
+                <b>Date:</b> {b.bookingDate}
+              </div>
 
-              <button onClick={() =>
-                updateStatus(b.id, "FACULTY_REJECTED")
-              }>
-                Reject
-              </button>
+              <div>
+                <b>Slot:</b> {b.timeSlot}
+              </div>
+
+              <div>
+                <b>Status:</b> {formatStatus(b.status)}
+              </div>
 
             </div>
           ))
         )}
-      </div>
 
-      <div className="card">
-        <h2>My Decisions ✔</h2>
-
-        {bookings
-          .filter(b =>
-            b.status === "FACULTY_APPROVED" ||
-            b.status === "FACULTY_REJECTED"
-          )
-          .map(b => (
-            <div key={b.id} className="list-item">
-              {b.resource?.name} – {b.status}
-            </div>
-          ))
-        }
       </div>
     </Layout>
   );

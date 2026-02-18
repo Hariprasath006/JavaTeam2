@@ -170,3 +170,13 @@ p {
   margin-left: 5px;
   font-weight: bold;
 }
+.list-item {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  gap: 20px;
+  padding: 12px;
+  background: #f8fbff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}

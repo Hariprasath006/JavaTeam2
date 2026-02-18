@@ -20,38 +20,49 @@ export default function AdminBookings() {
     loadBookings();
   };
 
-  const facultyApproved = bookings.filter(
-    b => b.status === "FACULTY_APPROVED"
-  );
-
   return (
     <Layout>
       <div className="card">
-        <h2>Faculty Approved Requests 🏛</h2>
+        <h2>All Bookings</h2>
 
-        {facultyApproved.length === 0 ? (
-          <p>No Requests</p>
-        ) : (
-          facultyApproved.map(b => (
+        {bookings.map(b => {
+
+          const isPending = b.status === "PENDING";
+          const isCancelReq = b.status === "CANCELLATION_REQUESTED";
+
+          return (
             <div key={b.id} className="list-item">
 
-              {b.user?.name} – {b.resource?.name}
+              {b.user?.name} – {b.resource?.name} – {b.status}
 
-              <button onClick={() =>
-                updateStatus(b.id, "ADMIN_APPROVED")
-              }>
-                Final Approve
-              </button>
+              {isPending && (
+                <>
+                  <button onClick={() => updateStatus(b.id, "APPROVED")}>
+                    Approve
+                  </button>
 
-              <button onClick={() =>
-                updateStatus(b.id, "ADMIN_REJECTED")
-              }>
-                Final Reject
-              </button>
+                  <button onClick={() => updateStatus(b.id, "REJECTED")}>
+                    Reject
+                  </button>
+                </>
+              )}
+
+              {isCancelReq && (
+                <>
+                  <button onClick={() => updateStatus(b.id, "CANCELLED")}>
+                    Approve Cancellation
+                  </button>
+
+                  <button onClick={() => updateStatus(b.id, "APPROVED")}>
+                    Reject Cancellation
+                  </button>
+                </>
+              )}
 
             </div>
-          ))
-        )}
+          );
+        })}
+
       </div>
     </Layout>
   );

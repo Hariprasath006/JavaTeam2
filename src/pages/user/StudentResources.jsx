@@ -9,13 +9,8 @@ export default function StudentResources() {
   const [resources, setResources] = useState([]);
 
   const loadResources = async () => {
-    try {
-      const res = await getResources();
-      setResources(res.data);
-
-    } catch {
-      alert("Failed to load resources");
-    }
+    const res = await getResources();
+    setResources(res.data);
   };
 
   useEffect(() => {
@@ -25,17 +20,14 @@ export default function StudentResources() {
   const handleBooking = async (resource) => {
 
     if (resource.status !== "AVAILABLE") {
-      alert("❌ Resource is unavailable");
+      alert("Resource unavailable");
       return;
     }
 
-    const bookingDate = prompt("Enter Booking Date (YYYY-MM-DD)");
-    const timeSlot = prompt("Enter Time Slot (10AM-11AM)");
+    const bookingDate = prompt("Enter Date (YYYY-MM-DD)");
+    const timeSlot = prompt("Enter Slot");
 
-    if (!bookingDate || !timeSlot) {
-      alert("Booking cancelled");
-      return;
-    }
+    if (!bookingDate || !timeSlot) return;
 
     try {
       await createBooking({
@@ -45,53 +37,31 @@ export default function StudentResources() {
         timeSlot
       });
 
-      alert("✅ Booking Created");
+      alert("Booking created");
 
     } catch {
-      alert("❌ Slot already booked!");
+      alert("Slot conflict");
     }
   };
 
   return (
     <Layout>
-
-      <h2>Resources</h2>
-
       <div className="grid">
-
         {resources.map(r => (
           <div key={r.id} className="card">
-
             <h3>{r.name}</h3>
-
-            <p>Type: {r.type}</p>
-            <p>Capacity: {r.capacity}</p>
-
-            <p>
-              Status:
-              <span className={
-                r.status === "AVAILABLE"
-                  ? "badge green"
-                  : "badge red"
-              }>
-                {r.status}
-              </span>
-            </p>
+            <p>{r.type}</p>
+            <p>{r.status}</p>
 
             <button
               disabled={r.status !== "AVAILABLE"}
               onClick={() => handleBooking(r)}
             >
-              {r.status === "AVAILABLE"
-                ? "Book Resource"
-                : "Unavailable"}
+              Book
             </button>
-
           </div>
         ))}
-
       </div>
-
     </Layout>
   );
 }
