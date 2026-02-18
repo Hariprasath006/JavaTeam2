@@ -85,8 +85,6 @@ Vite
 
 Axios
 
-Tailwind CSS
-
 Backend
 
 Spring Boot
