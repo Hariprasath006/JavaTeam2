@@ -1,43 +1,27 @@
-const BASE_URL = "http://localhost:8080/api";
+import axios from "axios";
 
-export const getUsers = async () => {
-  const res = await fetch(`${BASE_URL}/users`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return res.json();
-};
+const API = axios.create({
+  baseURL: "http://localhost:8080/api"
+});
 
-export const createUser = async (userData) => {
-  const res = await fetch(`${BASE_URL}/users`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
-  return res.json();
-};
+/* AUTH */
+export const login = (data) => API.post("/auth/login", data);
 
-export const login = async (loginData) => {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(loginData),
-  });
-  return res.json();
-};
+/* USERS */
+export const getUsers = () => API.get("/users");
+export const createUser = (data) => API.post("/users", data);
+export const updateUser = (id, data) => API.put(`/users/${id}`, data);
+export const deleteUser = (id) => API.delete(`/users/${id}`);
 
-export const getResources = async () => {
-  const res = await fetch(`${BASE_URL}/resources`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return res.json();
-};
+/* RESOURCES */
+export const getResources = () => API.get("/resources");
+export const createResource = (data) => API.post("/resources", data);
+export const deleteResource = (id) => API.delete(`/resources/${id}`);
+
+/* BOOKINGS */
+export const getBookings = () => API.get("/bookings");
+export const createBooking = (data) => API.post("/bookings", data);
+export const updateBookingStatus = (id, status) =>
+  API.put(`/bookings/${id}/status?status=${status}`);
+
+export default API;

@@ -1,58 +1,53 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/auth/Login";
-import AdminLayout from "./layouts/AdminLayout";
-import UserLayout from "./layouts/UserLayout";
-import ProtectedRoute from "./components/ProtectedRoute";
 
-import AdminDashboard from "./pages/admin/Dashboard";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
+
+/* STUDENT */
+import StudentDashboard from "./pages/user/StudentDashboard";
+import StudentResources from "./pages/user/StudentResources";
+import StudentBookings from "./pages/user/StudentBookings";
+
+/* STAFF */
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import StaffResources from "./pages/staff/StaffResources";
+import StaffBookings from "./pages/staff/StaffBookings";
+
+/* ADMIN */
+import Dashboard from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
 import Resources from "./pages/admin/Resources";
-import Bookings from "./pages/admin/Bookings";
+import AdminBookings from "./pages/admin/AdminBookings";
 
-import UserDashboard from "./pages/user/Dashboard";
-import UserResources from "./pages/user/Resources";
-import MyBookings from "./pages/user/MyBookings";
-import Register from "./pages/auth/Register";
-
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* LOGIN */}
         <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/*Signup*/}
+        <Route path="/signup" element={<Signup />} />
 
-        {/* Admin Routes */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute role="ADMIN">
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<Users />} />
-          <Route path="resources" element={<Resources />} />
-          <Route path="bookings" element={<Bookings />} />
-        </Route>
 
-        {/* User Routes */}
-        <Route
-          path="/user"
-          element={
-            <ProtectedRoute role="USER">
-              <UserLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<UserDashboard />} />
-          <Route path="resources" element={<UserResources />} />
-          <Route path="bookings" element={<MyBookings />} />
-        </Route>
+        {/* ✅ STUDENT ROUTES 🔥 */}
+        <Route path="/user" element={<StudentDashboard />} />
+        <Route path="/user/resources" element={<StudentResources />} />
+        <Route path="/user/bookings" element={<StudentBookings />} />
+
+        {/* STAFF */}
+        <Route path="/staff" element={<StaffDashboard />} />
+        <Route path="/staff/resources" element={<StaffResources />} />
+        <Route path="/staff/bookings" element={<StaffBookings />} />
+
+        {/* ADMIN */}
+        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin/users" element={<Users />} />
+        <Route path="/admin/resources" element={<Resources />} />
+        <Route path="/admin/bookings" element={<AdminBookings />} />
+
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

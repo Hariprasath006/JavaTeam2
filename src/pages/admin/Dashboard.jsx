@@ -1,12 +1,17 @@
+import Layout from "../../components/Layout";
+
 export default function Dashboard() {
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
-      <div className="grid grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded shadow">Total Users</div>
-        <div className="bg-white p-6 rounded shadow">Total Resources</div>
-        <div className="bg-white p-6 rounded shadow">Total Bookings</div>
+    <Layout>
+      <div className="card">
+        <h2>Admin Dashboard 👑</h2>
+        <p>Welcome, {user.name}</p>
+        <p>Role: {user.role}</p>
+        <p>Manage entire system</p>
       </div>
-    </div>
+    </Layout>
   );
 }
