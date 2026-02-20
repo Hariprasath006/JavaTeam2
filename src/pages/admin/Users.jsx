@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { getUsers, createUser, deleteUser, updateUser } from "../../api/api";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from "../../api/api";
 
 export default function Users() {
 
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({});
-  const [editingId, setEditingId] = useState(null);   // ✅ TRACK EDIT
+  const [editingUser, setEditingUser] = useState(null);
 
   const loadUsers = async () => {
     const res = await getUsers();
@@ -17,11 +22,11 @@ export default function Users() {
     loadUsers();
   }, []);
 
-  /* ✅ CREATE */
+  /* ✅ CREATE USER */
   const handleCreate = async () => {
 
     if (!form.name || !form.email || !form.password) {
-      alert("Fill required fields");
+      alert("Fill required fields ❌");
       return;
     }
 
@@ -37,35 +42,48 @@ export default function Users() {
     }
   };
 
-  /* ✅ EDIT */
-  const handleEdit = (user) => {
-    setForm(user);
-    setEditingId(user.id);
+  /* ✅ DELETE USER */
+  const handleDelete = async (id) => {
+
+    if (!window.confirm("Delete user?")) return;
+
+    try {
+      await deleteUser(id);
+
+      alert("User Deleted ✅");
+      loadUsers();
+
+    } catch {
+      alert("Delete failed ❌");
+    }
   };
 
-  /* ✅ UPDATE */
+  /* ✅ START EDIT */
+  const startEdit = (user) => {
+    setEditingUser({ ...user });
+  };
+
+  /* ✅ UPDATE USER */
   const handleUpdate = async () => {
 
-    await updateUser(editingId, form);
+    try {
+      await updateUser(editingUser.id, editingUser);
 
-    alert("User Updated ✅");
+      alert("User Updated ✅");
+      setEditingUser(null);
+      loadUsers();
 
-    setForm({});
-    setEditingId(null);
-    loadUsers();
-  };
-
-  /* ✅ DELETE */
-  const handleDelete = async (id) => {
-    await deleteUser(id);
-    loadUsers();
+    } catch {
+      alert("Update failed ❌");
+    }
   };
 
   return (
     <Layout>
 
+      {/* ✅ CREATE FORM */}
       <div className="card">
-        <h2>{editingId ? "Edit User" : "Add User"}</h2>
+        <h2>Add User</h2>
 
         <input
           placeholder="Name"
@@ -101,23 +119,26 @@ export default function Users() {
           <option value="ADMIN">Admin</option>
         </select>
 
-        {editingId ? (
-          <button onClick={handleUpdate}>Update User</button>
-        ) : (
-          <button onClick={handleCreate}>Create User</button>
-        )}
+        <button onClick={handleCreate}>
+          Create User
+        </button>
       </div>
 
+      {/* ✅ USER LIST */}
       <div className="card">
         <h2>All Users</h2>
 
         {users.map(u => (
           <div key={u.id} className="list-item">
 
-            {u.name} – {u.email} – {u.role}
+            <div>
+              {u.name} – {u.email} – {u.role}
+            </div>
 
             <div>
-              <button onClick={() => handleEdit(u)}>Edit</button>
+              <button onClick={() => startEdit(u)}>
+                Edit
+              </button>
 
               <button onClick={() => handleDelete(u.id)}>
                 Delete
@@ -127,6 +148,66 @@ export default function Users() {
           </div>
         ))}
       </div>
+
+      {/* ✅ EDIT PANEL */}
+      {editingUser && (
+        <div className="card">
+          <h2>Edit User ✏</h2>
+
+          <input
+            placeholder="Name"
+            value={editingUser.name}
+            onChange={e =>
+              setEditingUser({ ...editingUser, name: e.target.value })
+            }
+          />
+
+          <input
+            placeholder="Email"
+            value={editingUser.email}
+            onChange={e =>
+              setEditingUser({ ...editingUser, email: e.target.value })
+            }
+          />
+
+          <input
+            placeholder="Phone"
+            value={editingUser.phone}
+            onChange={e =>
+              setEditingUser({ ...editingUser, phone: e.target.value })
+            }
+          />
+
+          <select
+            value={editingUser.role}
+            onChange={e =>
+              setEditingUser({ ...editingUser, role: e.target.value })
+            }
+          >
+            <option value="STUDENT">Student</option>
+            <option value="STAFF">Staff</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+
+          <select
+            value={editingUser.status}
+            onChange={e =>
+              setEditingUser({ ...editingUser, status: e.target.value })
+            }
+          >
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+          </select>
+
+          <button onClick={handleUpdate}>
+            Update User
+          </button>
+
+          <button onClick={() => setEditingUser(null)}>
+            Cancel
+          </button>
+        </div>
+      )}
 
     </Layout>
   );
