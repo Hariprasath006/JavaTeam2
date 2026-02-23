@@ -55,13 +55,16 @@ export default function Login() {
       <div className="card">
         <h2>Login</h2>
 
-        <input
-          placeholder="Email"
-          value={form.email}   /* ✅ CONTROLLED */
-          onChange={e =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
+     <input
+  placeholder="Email"
+  value={form.email}
+  onChange={e =>
+    setForm({
+      ...form,
+      email: e.target.value.trim().toLowerCase()
+    })
+  }
+/>
 
         <input
           type="password"
