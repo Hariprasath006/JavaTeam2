@@ -30,24 +30,24 @@ public class DataLoader {
     }
 
     /* ✅ DEFAULT ADMIN 🔥 */
-    @Bean
-    CommandLineRunner loadAdmin(UserRepository repo) {
-        return args -> {
+@Bean
+CommandLineRunner loadAdmin(UserRepository repo) {
+    return args -> {
 
-            if (repo.findByEmail("admin@campus.com").isEmpty()) {
+        if (repo.findByEmailIgnoreCase("admin@campus.com").isEmpty()) {
 
-                User admin = new User();
-                admin.setName("System Admin");
-                admin.setEmail("admin@campus.com");
-                admin.setPhone("9999999999");
-                admin.setPassword("admin123");
-                admin.setRole("ADMIN");
-                admin.setStatus("ACTIVE");
+            User admin = new User();
+            admin.setName("System Admin");
+            admin.setEmail("admin@campus.com");
+            admin.setPhone("9999999999");
+            admin.setPassword("admin123");
+            admin.setRole("ADMIN");
+            admin.setStatus("ACTIVE");
 
-                repo.save(admin);
+            repo.save(admin);
 
-                System.out.println("✅ Admin Account Created");
-            }
-        };
-    }
+            System.out.println("✅ Admin Account Created");
+        }
+    };
+}
 }
