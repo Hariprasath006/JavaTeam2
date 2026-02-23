@@ -6,8 +6,10 @@ import com.example.CampusJava.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserRepository repo;
@@ -22,23 +24,23 @@ public class AuthController {
         User user = repo.findByEmail(request.getEmail());
 
         if (user == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("User not found ❌");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "User not found ❌"));
         }
 
         if (!user.getPassword().equals(request.getPassword())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Invalid password ❌");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Invalid password ❌"));
         }
 
         if (!user.getRole().equalsIgnoreCase(request.getRole())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Invalid role ❌");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Invalid role ❌"));
         }
 
-        return ResponseEntity.ok("Login Success ✅");
+        return ResponseEntity.ok(Map.of(
+                "message", "Login Success ✅",
+                "user", user
+        ));
     }
 }
