@@ -1,53 +1,44 @@
-package com.example.CampusJava.config;
+package com.example.CampusJava.model;
 
-import com.example.CampusJava.model.Resource;
-import com.example.CampusJava.model.User;
-import com.example.CampusJava.repository.ResourceRepository;
-import com.example.CampusJava.repository.UserRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import jakarta.persistence.*;
+import java.util.UUID;
 
-@Configuration
-public class DataLoader {
+@Entity
+@Table(name = "resources")
+public class Resource {
 
-    /* ✅ DEFAULT RESOURCES */
-    @Bean
-    CommandLineRunner loadResources(ResourceRepository repo) {
-        return args -> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-            if (repo.count() == 0) {
+    private String name;
+    private String type;
+    private int capacity;
+    private String status;
 
-                repo.save(new Resource(null, "Lab 1", "LAB", 40, "AVAILABLE"));
-                repo.save(new Resource(null, "Lab 2", "LAB", 35, "AVAILABLE"));
-                repo.save(new Resource(null, "Classroom A", "CLASSROOM", 60, "AVAILABLE"));
-                repo.save(new Resource(null, "Event Hall", "HALL", 200, "AVAILABLE"));
-                repo.save(new Resource(null, "Computer Lab", "LAB", 50, "AVAILABLE"));
+    public Resource() {}
 
-                System.out.println("✅ Default Resources Loaded");
-            }
-        };
+    /* ✅ ADD THIS CONSTRUCTOR 🔥 */
+    public Resource(UUID id, String name, String type, int capacity, String status) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.capacity = capacity;
+        this.status = status;
     }
 
-    /* ✅ DEFAULT ADMIN 🔥 */
-    @Bean
-    CommandLineRunner loadAdmin(UserRepository repo) {
-        return args -> {
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
-            if (repo.findByEmail("admin@campus.com").isEmpty()) {
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-                User admin = new User();
-                admin.setName("System Admin");
-                admin.setEmail("admin@campus.com");
-                admin.setPhone("9999999999");
-                admin.setPassword("admin123");
-                admin.setRole("ADMIN");
-                admin.setStatus("ACTIVE");
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-                repo.save(admin);
+    public int getCapacity() { return capacity; }
+    public void setCapacity(int capacity) { this.capacity = capacity; }
 
-                System.out.println("✅ Admin Account Created");
-            }
-        };
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
