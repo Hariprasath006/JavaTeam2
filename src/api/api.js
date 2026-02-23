@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://javateam2.onrender.com"
+  baseURL: "https://javateam2.onrender.com/api"
 });
 
 /* AUTH */
