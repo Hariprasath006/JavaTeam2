@@ -18,27 +18,36 @@ export default function Login() {
     }
 
     try {
-      const res = await login(form);
+  const res = await login(form);
 
-      console.log("SUCCESS:", res.data);
+  console.log("SUCCESS:", res.data);
 
-      const user = res.data.user;
+  /* ✅ SAFE EXTRACTION */
+  const user = res.data.user || res.data;
 
-      localStorage.setItem("user", JSON.stringify(user));
+  if (!user || !user.role) {
+    console.log("Invalid response:", res.data);
+    alert("Invalid server response ❌");
+    return;
+  }
 
-      const role = user.role;
+  localStorage.setItem("user", JSON.stringify(user));
 
-      if (role === "STUDENT") window.location.href = "/user";
-      if (role === "STAFF") window.location.href = "/staff";
-      if (role === "ADMIN") window.location.href = "/admin";
+  /* ✅ NORMALIZE ROLE */
+  const role = user.role?.toUpperCase();
 
-    } catch (err) {
+  console.log("ROLE =", role);
 
-      console.log("FULL ERROR:", err);
-      console.log("SERVER ERROR:", err.response?.data);
+  if (role === "STUDENT") window.location.href = "/user";
+  if (role === "STAFF") window.location.href = "/staff";
+  if (role === "ADMIN") window.location.href = "/admin";
 
-      alert(err.response?.data?.message || "Login Failed");
-    }
+} catch (err) {
+  console.log("FULL ERROR:", err);
+  console.log("SERVER ERROR:", err.response?.data);
+
+  alert(err.response?.data?.message || "Login Failed");
+}
   };
 
   return (
