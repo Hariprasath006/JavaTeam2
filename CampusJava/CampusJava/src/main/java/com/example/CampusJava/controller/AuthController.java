@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,12 +22,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-        User user = repo.findByEmail(request.getEmail());
+        /* ✅ TRIM + IGNORE CASE 🔥 */
+        Optional<User> optionalUser =
+                repo.findByEmailIgnoreCase(request.getEmail().trim());
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(Map.of("message", "User not found ❌"));
         }
+
+        User user = optionalUser.get();
 
         if (!user.getPassword().equals(request.getPassword())) {
             return ResponseEntity.badRequest()
