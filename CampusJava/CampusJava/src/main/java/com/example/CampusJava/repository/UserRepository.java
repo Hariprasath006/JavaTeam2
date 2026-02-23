@@ -9,6 +9,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findByStatus(String status);
 
-    // ✅ LOGIN SUPPORT 🔥
-    User findByEmail(String email);
+    /* ✅ FIXED LOGIN SUPPORT 🔥 */
+    Optional<User> findByEmailIgnoreCase(String email);
 }
